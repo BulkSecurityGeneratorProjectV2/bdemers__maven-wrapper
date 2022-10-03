@@ -209,8 +209,14 @@ public class Installer
                 continue;
             }
 
+            final File zipEntryFile = new File( dest, entry.getName() );
+
+            if (!zipEntryFile.toPath().normalize().startsWith(dest.toPath().normalize())) {
+                throw new IOException("Bad zip entry");
+            }
+
             copyInputStream( zipFile.getInputStream( entry ),
-                             new BufferedOutputStream( new FileOutputStream( new File( dest, entry.getName() ) ) ) );
+                             new BufferedOutputStream( new FileOutputStream(zipEntryFile ) ) );
         }
         zipFile.close();
     }
